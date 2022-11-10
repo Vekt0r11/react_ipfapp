@@ -13,7 +13,7 @@ function OffcanvasMenu() {
       const { nombres, apellidos } = jefeCatedra.infoPersonal
 
       return (
-        <li key={key} className='container'>
+        <li key={key} className='container' style={{backgroundColor: '#aeaeae'}}>
           <div className="card-body position-relative row">
             <blockquote className="blockquote mb-0">
               {/* Navigate to = _id */}
@@ -21,9 +21,6 @@ function OffcanvasMenu() {
               <p><cite title="Source Title">{anio}</cite> - {nombre}</p>
               <footer className="blockquote-footer">{`${apellidos}, ${nombres}`}</footer>
             </blockquote>
-            <div>
-              <BiRightArrow />
-            </div>
           </div>
         </li>
       )
