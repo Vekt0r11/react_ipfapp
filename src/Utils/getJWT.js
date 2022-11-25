@@ -1,5 +1,5 @@
 export const getJWT = async (user, pass) => {
-  const URL = 'http://192.168.0.19:4000/usuario/login'
+  const URL = 'http://localhost:4000/usuario/login'
 
   const body = JSON.stringify({
     nombreUsuario: user,
@@ -16,9 +16,7 @@ export const getJWT = async (user, pass) => {
   }
 
   const response = await fetch(URL, config)
-    .then(response => {
-      return response.json()
-    })
+    .then(response => response.json())
 
   return response
 }

@@ -1,31 +1,41 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useStyles } from 'react-styles-hook'
-import Post from '../../components/Post'
-import PostCreatorInput from '../../components/PostCreatorInput'
+//Redux
+import { useDispatch, useSelector } from 'react-redux'
+import { updateAnunciosAction } from '../../redux/actions/anuncios'
+//Utilities
 import { getAnuncios } from '../../Utils/getAnuncios'
+//Components and pages
+import PostCreatorInput from '../../components/PostCreatorInput'
+import Post from '../../components/Post'
+import { useLocation } from 'react-router-dom'
 
 function Home() {
 
-  const [anuncios, setAnuncios] = useState([])
+  const firstLoadRef = useRef(true)
+  
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
+  const anuncios = useSelector(state => state.anuncios)
 
-  const loadAnuncios = () => {
+  const location = useLocation()
+  const [reloaded, setReloaded] = useState(false)
 
-    const anunciosList = anuncios.map((element)=>{
-      return <Post anuncio={element} />
+  const loadAnuncios = (anuncios) => {
+    return anuncios.map((element, key) => {
+      return <Post anuncio={element} key={key} />
     })
-
-    return anunciosList
   }
 
+  useEffect(() => {
 
-    useEffect(() => {
-
-      if (true) {
-        getAnuncios()
-          .then((res) => setAnuncios(res))
-      }
-
-    }, [])
+    if (firstLoadRef.current) {
+      getAnuncios(user.id)
+        .then(res => dispatch(updateAnunciosAction(res)))
+      firstLoadRef.current = false
+      setReloaded(true)
+    }
+  }, [anuncios, reloaded])
 
   return (
     <div className='container-fluid row'>
@@ -36,20 +46,30 @@ function Home() {
         <PostCreatorInput />
 
         {
+          location.state && !reloaded
+            ? <div className='d-flex justify-content-center' onClick={async () => await getAnuncios(user.id).then(res => dispatch(updateAnunciosAction(res)))}>
+              <span style={styles.reloadPill} className="badge rounded-pill p-2" onClick={() => setReloaded(true)}>Actualizar anuncios</span>
+            </div>
+            : null
+        }
+
+        {
           anuncios.length > 0
-          ? loadAnuncios()
-          : null
+            ? loadAnuncios(anuncios)
+            : null
         }
       </div>
       <div className='col-3'>
-        Ver mockup
+
       </div>
     </div>
   )
 }
 
 const styles = useStyles({
-
+  reloadPill: {
+    backgroundColor: '#08171c'
+  }
 })
 
 export default Home

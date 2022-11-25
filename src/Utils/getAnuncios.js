@@ -1,8 +1,8 @@
-export const getAnuncios = async () => {
+export const getAnuncios = async (id) => {
   //Obtener id del reducer de usuario//
-  const id = '6357f74d2a7f4258bf33d5e3'
+  // const id = '6357f74d2a7f4258bf33d5e3'
 
-  const URL = `http://192.168.0.19:4000/anuncio/propio/${id}`
+  const URL = `http://localhost:4000/anuncio/propio/${id}`
 
   const config = {
     method: 'GET',
